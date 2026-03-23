@@ -20,7 +20,7 @@ export default function History({ onLoad }) {
         <div key={it.id} className="border rounded p-2 flex items-center gap-2">
           <img src={it.image} alt="thumb" className="w-16 h-12 object-cover rounded" />
           <div className="flex-1">
-            <div className="text-sm">{it.style} · {it.tone}</div>
+            <div className="text-sm">{it.style}</div>
             <div className="text-xs text-gray-600">{it.captions?.[0]}</div>
           </div>
           <button onClick={() => load(it)} className="px-2 py-1 bg-blue-600 text-white rounded">Load</button>

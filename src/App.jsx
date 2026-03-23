@@ -10,7 +10,6 @@ export default function App() {
   const [loading, setLoading] = useState(false)
   const [captions, setCaptions] = useState([])
   const [style, setStyle] = useState('Descriptive')
-  const [tone, setTone] = useState('Neutral')
   const [dark, setDark] = useState(false)
 
   useEffect(() => {
@@ -21,12 +20,12 @@ export default function App() {
     if (!imageData) return
     setLoading(true)
     try {
-      const res = await generateCaptions(imageData.base64, style, tone)
+      const res = await generateCaptions(imageData.base64, style)
       // res: array of strings
       setCaptions(res)
       // save to localStorage history
       const prev = JSON.parse(localStorage.getItem('captions_history') || '[]')
-      const entry = { id: Date.now(), image: imageData.base64, style, tone, captions: res }
+      const entry = { id: Date.now(), image: imageData.base64, style, captions: res }
       const next = [entry, ...prev].slice(0, 5)
       localStorage.setItem('captions_history', JSON.stringify(next))
     } catch (e) {
@@ -52,10 +51,8 @@ export default function App() {
           <ImageUploader value={imageData} onChange={setImageData} />
 
           <Controls
-            style={style}
-            setStyle={setStyle}
-            tone={tone}
-            setTone={setTone}
+            mode={style}
+            setMode={setStyle}
             onGenerate={handleGenerate}
             loading={loading}
           />

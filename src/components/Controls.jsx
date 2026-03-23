@@ -1,16 +1,13 @@
 import React from 'react'
-import ToneSelector from './ToneSelector'
+const modes = ['Descriptive', 'Funny', 'Professional', 'Instagram']
 
-const styles = ['Descriptive', 'Funny', 'Professional', 'Instagram']
-
-export default function Controls({ style, setStyle, tone, setTone, onGenerate, loading }) {
+export default function Controls({ mode, setMode, onGenerate, loading }) {
   return (
     <div className="mt-4 flex flex-col md:flex-row md:items-center gap-4">
-      <div className="flex-1 flex gap-2">
-        <select value={style} onChange={e => setStyle(e.target.value)} className="p-2 border rounded">
-          {styles.map(s => <option key={s} value={s}>{s}</option>)}
+      <div className="flex-1">
+        <select value={mode} onChange={e => setMode(e.target.value)} className="p-2 border rounded w-full md:w-auto">
+          {modes.map(s => <option key={s} value={s}>{s}</option>)}
         </select>
-        <ToneSelector value={tone} onChange={setTone} />
       </div>
 
       <div>
