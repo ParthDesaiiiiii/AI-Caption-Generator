@@ -11,6 +11,7 @@ export default function App() {
   const [captions, setCaptions] = useState([])
   const [style, setStyle] = useState('Descriptive')
   const [labels, setLabels] = useState([])
+  const [description, setDescription] = useState('')
   const [dark, setDark] = useState(false)
 
   useEffect(() => {
@@ -21,12 +22,12 @@ export default function App() {
     if (!imageData) return
     setLoading(true)
     try {
-      const res = await generateCaptions(imageData.base64, style, labels)
+      const res = await generateCaptions(imageData.base64, style, labels, description)
       // res: array of strings
       setCaptions(res)
       // save to localStorage history
       const prev = JSON.parse(localStorage.getItem('captions_history') || '[]')
-      const entry = { id: Date.now(), image: imageData.base64, style, captions: res }
+      const entry = { id: Date.now(), image: imageData.base64, style, description, captions: res }
       const next = [entry, ...prev].slice(0, 5)
       localStorage.setItem('captions_history', JSON.stringify(next))
     } catch (e) {
@@ -75,6 +76,18 @@ export default function App() {
               ))}</div>
             </div>
           )}
+
+          <div className="mt-3">
+            <label className="block text-sm font-medium mb-1">Describe this photo (optional)</label>
+            <input
+              type="text"
+              placeholder="e.g. 'Me and my friend at the beach, sunset behind us'"
+              value={description}
+              onChange={e => setDescription(e.target.value)}
+              className="w-full p-2 border rounded"
+            />
+            <div className="text-xs text-gray-500 mt-1">The caption generator will prioritize this description when creating captions.</div>
+          </div>
 
           <Controls
             mode={style}
