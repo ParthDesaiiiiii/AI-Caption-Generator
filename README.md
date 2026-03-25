@@ -40,3 +40,4 @@ npm run dev
 Notes
 - If no API key is set, the app uses a mock generator so you can try UI features offline.
 - The OpenAI request in `src/utils/api.js` is a sample pattern — you may need to adapt it to the exact image/vision endpoint and model you choose.
+new update
