@@ -55,60 +55,69 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6">
-      <div className="max-w-3xl w-full">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-semibold">AI Image Caption Generator</h1>
-          <div className="flex items-center gap-2">
-            <label className="text-sm">Dark</label>
+    <div className="min-h-screen flex items-start justify-center py-12 px-6">
+      <div className="w-full max-w-4xl">
+        <header className="flex items-center justify-between mb-6">
+          <div>
+            <h1 className="text-2xl font-semibold">AI Image Caption Generator</h1>
+            <p className="text-sm small-muted">Upload a photo, give a short context, and get creative captions.</p>
+          </div>
+          <div className="flex items-center gap-3">
+            <label className="text-sm small-muted">Dark</label>
             <input type="checkbox" checked={dark} onChange={e => setDark(e.target.checked)} />
           </div>
-        </div>
+        </header>
 
-        <div className="bg-[var(--card)] rounded-xl shadow p-6">
-          <ImageUploader value={imageData} onChange={onImageChange} />
-
-          {labels.length > 0 && (
-            <div className="mt-3 text-sm text-gray-600">
-              <div className="font-medium">Detected labels (focused):</div>
-              <div className="flex gap-2 flex-wrap mt-1">{labels.map((l,i) => (
-                <span key={i} className="px-2 py-1 bg-gray-100 rounded text-xs">{l.className} ({Math.round((l.probability||0)*100)}%)</span>
-              ))}</div>
+        <div className="card p-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="md:col-span-2">
+              <ImageUploader value={imageData} onChange={onImageChange} />
             </div>
-          )}
 
-          <div className="mt-3">
-            <label className="block text-sm font-medium mb-1">Describe this photo (optional)</label>
-            <input
-              type="text"
-              placeholder="e.g. 'Me and my friend at the beach, sunset behind us'"
-              value={description}
-              onChange={e => setDescription(e.target.value)}
-              className="w-full p-2 border rounded"
-            />
-            <div className="text-xs text-gray-500 mt-1">The caption generator will prioritize this description when creating captions.</div>
-          </div>
-
-          <Controls
-            mode={style}
-            setMode={setStyle}
-            onGenerate={handleGenerate}
-            loading={loading}
-          />
-
-          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              {captions.length > 0 && (
-                <div>
-                  <h2 className="text-lg font-medium mb-2">Generated Captions</h2>
-                  <div className="space-y-3">
-                    {captions.map((c, i) => (
-                      <CaptionCard key={i} caption={c} image={imageData?.base64} />
-                    ))}
-                  </div>
+            <div className="md:col-span-1">
+              {/* Right column: detections, description and controls */}
+              {labels.length > 0 && (
+                <div className="mb-4 text-sm text-gray-600">
+                  <div className="font-medium">Detected labels (focused):</div>
+                  <div className="flex gap-2 flex-wrap mt-1">{labels.map((l,i) => (
+                    <span key={i} className="px-2 py-1 bg-gray-100 rounded text-xs">{l.className} ({Math.round((l.probability||0)*100)}%)</span>
+                  ))}</div>
                 </div>
               )}
+
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-1">Describe this photo (optional)</label>
+                <input
+                  type="text"
+                  placeholder="e.g. 'Me and my friend at the beach, sunset behind us'"
+                  value={description}
+                  onChange={e => setDescription(e.target.value)}
+                  className="w-full p-2 border rounded"
+                />
+                <div className="text-xs text-gray-500 mt-1">The caption generator will prioritize this description when creating captions.</div>
+              </div>
+
+              <Controls
+                mode={style}
+                setMode={setStyle}
+                onGenerate={handleGenerate}
+                loading={loading}
+              />
             </div>
+          </div>
+
+          <div className="mt-6 grid grid-cols-1 gap-4">
+            {captions.length > 0 && (
+              <div>
+                <h2 className="text-lg font-medium mb-2">Generated Captions</h2>
+                <div className="space-y-3">
+                  {captions.map((c, i) => (
+                    <CaptionCard key={i} caption={c} image={imageData?.base64} />
+                  ))}
+                </div>
+              </div>
+            )}
+
             <div>
               <h2 className="text-lg font-medium mb-2">History</h2>
               <History onLoad={setImageData} />
