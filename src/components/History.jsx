@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-export default function History({ onLoad }) {
+export default function History({ onLoad, loadEntry }) {
   const [items, setItems] = useState([])
 
   useEffect(() => {
@@ -9,7 +9,8 @@ export default function History({ onLoad }) {
   }, [])
 
   const load = item => {
-    onLoad({ base64: item.image, file: null })
+    const handler = onLoad || loadEntry
+    if (handler) handler(item)
   }
 
   if (items.length === 0) return <p className="text-sm text-gray-500">No history yet</p>

@@ -5,7 +5,7 @@ import { classifyImageFromDataUrl } from './classify'
 // When no API key is provided, classify the image and produce multiple
 // style-specific captions based on labels.
 
-const mockGenerator = async (base64, style, prelabels = null, userDesc = '') => {
+const mockGenerator = async (base64, style, prelabels = null, userDesc = '', topicOverride = '') => {
   try {
     const preds = prelabels || (await classifyImageFromDataUrl(base64, 5))
     // filter low-confidence labels
@@ -24,9 +24,9 @@ const mockGenerator = async (base64, style, prelabels = null, userDesc = '') => 
     const useDesc = (typeof userDesc === 'string' && userDesc.trim().length > 0)
     const desc = (userDesc || '').trim()
 
-    if (useDesc) {
-  // Determine topic: prefer the user's description when provided; otherwise use focused prelabels
-  const topic = useDesc ? extractTopicFromText(desc) : ((prelabels && prelabels.length > 0) ? (prelabels[0].className.split(',')[0]) : extractTopicFromText(desc))
+    if (useDesc || topicOverride) {
+  // Determine topic: prefer explicit topicOverride, then the user's description, otherwise use focused prelabels
+  const topic = topicOverride && topicOverride.trim().length > 0 ? topicOverride : (useDesc ? extractTopicFromText(desc) : ((prelabels && prelabels.length > 0) ? (prelabels[0].className.split(',')[0]) : extractTopicFromText(desc)))
       const topicSyn = synonymFor(topic)
       // Build three creative captions that DO NOT repeat the user's description verbatim
       const caps = []
@@ -52,7 +52,7 @@ const mockGenerator = async (base64, style, prelabels = null, userDesc = '') => 
       const uniq = [...new Set(caps)]
       return uniq.slice(0, 3)
     }
-    if (isPerson) {
+  if (isPerson) {
       // people-focused captions
       if (/funny/i.test(style)){
         variations.push(`😄 Funny → "You and your friend making memories."`)
@@ -111,10 +111,10 @@ const mockGenerator = async (base64, style, prelabels = null, userDesc = '') => 
   }
 }
 
-export async function generateCaptions(base64Image, style = 'Descriptive', prelabels = null, userDescription = '') {
+export async function generateCaptions(base64Image, style = 'Descriptive', prelabels = null, userDescription = '', topicOverride = '') {
   const key = import.meta.env.VITE_OPENAI_API_KEY
   if (!key) {
-    return mockGenerator(base64Image, style, prelabels, userDescription)
+    return mockGenerator(base64Image, style, prelabels, userDescription, topicOverride)
   }
 
   try {
@@ -136,7 +136,7 @@ export async function generateCaptions(base64Image, style = 'Descriptive', prela
     })
 
     const text = res.data?.choices?.[0]?.message?.content
-    if (!text) return mockGenerator(base64Image, style)
+  if (!text) return mockGenerator(base64Image, style)
 
     try {
       const parsed = JSON.parse(text)
@@ -149,6 +149,8 @@ export async function generateCaptions(base64Image, style = 'Descriptive', prela
     return mockGenerator(base64Image, style)
   }
 }
+
+export { extractTopicFromText }
 
 function aOrAn(word){
   return /^[aeiouAEIOU]/.test(word) ? 'an' : 'a'

@@ -39,11 +39,11 @@ export default function CaptionCard({ caption, image }) {
   }
 
   return (
-    <div className="border rounded p-3 bg-[var(--bg)]">
-      <p className="mb-3">{caption}</p>
-      <div className="flex gap-2">
-        <button onClick={copy} className="px-3 py-1 bg-blue-600 text-white rounded">Copy</button>
-        {image && <button onClick={download} className="px-3 py-1 bg-gray-700 text-white rounded">Download as Image</button>}
+    <div className="caption-card">
+      <div className="caption-text">{caption}</div>
+      <div className="caption-meta">
+        <button onClick={copy} className="btn-primary text-sm">Copy</button>
+        {image && <button onClick={download} className="btn-ghost text-sm">Download</button>}
       </div>
     </div>
   )

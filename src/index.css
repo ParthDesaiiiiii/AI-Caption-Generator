@@ -72,3 +72,17 @@ body {
 
 .small-muted{ color: var(--muted); font-size: 0.9rem }
 
+/* Hero */
+.hero-title{ font-size: 2.25rem; font-weight: 700; }
+.hero-sub{ color: var(--muted); margin-top: .5rem }
+
+/* Uploader better visual */
+.uploader-inner{ display:flex; gap:1rem; align-items:center; padding:1rem }
+.uploader-preview{ width:160px; height:120px; border-radius:8px; overflow:hidden; background:#f3f4f6; display:flex; align-items:center; justify-content:center }
+.uploader-actions{ display:flex; gap:.5rem; }
+
+.caption-card{ padding:1rem; border-radius:12px; background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border:1px solid rgba(15,23,42,0.04) }
+.caption-text{ font-size:1rem }
+.caption-meta{ display:flex; gap:.5rem; margin-top:.5rem }
+
+
